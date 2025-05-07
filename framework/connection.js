@@ -7,8 +7,12 @@ let bdd = new Sequelize(process.env.BDD_NAME, process.env.BDD_USER, process.env.
 });
 
 let connect = async () => {
-    await bdd.authenticate();
-    console.log('Connection to database has been established successfully');
+    try {
+        await bdd.authenticate();
+        console.log('Connection to database has been established successfully');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
 }
 
 module.exports = { connect, bdd };
