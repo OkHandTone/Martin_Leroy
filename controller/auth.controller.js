@@ -1,10 +1,20 @@
 const User = require('./../model/user.schema.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Joi = require('joi');
 require('dotenv').config();
 
-
 const login = (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().min(8).required()
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
     let user = User.getByEmail(req.body.email);
     if (!user) {
         return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // ne pas mettre cette info car utilisateur peut savoir si le user existe deja
@@ -22,6 +32,16 @@ const login = (req, res, next) => {
 }
 
 const signIn = async (req,res,next) => {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().min(8).required()
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
     let member = await Role.findOne({ where: { name: "Member" } });
     if (!member) {
         return res.status(404).json({ message: "Le rôle Member n'as pas été trouvé" });
