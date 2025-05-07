@@ -18,5 +18,3 @@ const auth = (role) => {
 }
 
 module.exports = auth;
-
-// pas de middleware avec un ratelimit, risque d attaque par brutforce

@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 let Role = bdd.define('role',{
     name: {
         type: DataTypes.STRING(255),
-        unique: true
+        unique: true   // ??
     }
 });
 

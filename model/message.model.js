@@ -6,7 +6,7 @@ let Message = bdd.define('message',{
         type: DataTypes.STRING(255)
     },
     content: {
-        type: DataTypes.STRING(5000)    //voir si forma correct, mais risque de laisser passer beaucoup de type d injection
+        type: DataTypes.STRING(5000)
     }
 });
 

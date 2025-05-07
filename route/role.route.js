@@ -3,7 +3,7 @@ const router = express.Router();
 const roleController = require('../controller/role.controller.js');
 const auth = require('../middleware/auth.middleware.js');
 
-router.get('/', roleController.getAll);
+router.get('/', roleController.getAll); // pas de limiter ici
 router.get('/:id', roleController.getById);
 
 router.post('/',auth, roleController.create);
