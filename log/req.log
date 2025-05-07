@@ -5,7 +5,7 @@
  Content-Type: 
 16/04/2025 15:28:06 GET /user/1 ::1 
  Content-Type: 
-16/04/2025 15:28:59 GET /user/1 ::1 
+16/04/2025 15:28:59 GET /user/1 ::1  // separation des logs require
  Content-Type: 
 16/04/2025 15:29:21 POST /user/ ::1 
  Content-Type: application/json 
