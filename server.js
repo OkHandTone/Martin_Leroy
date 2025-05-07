@@ -1,8 +1,9 @@
 const http = require('http');
 const app = require('./app.js');
+require('dotenv').config();
 
-const port = 3000;
-
+const port = process.env.PORT; // port a changer
+ 
 const server = http.createServer(app);
 
 server.on('listening',() => {
