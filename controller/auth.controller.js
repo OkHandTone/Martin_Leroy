@@ -2,13 +2,14 @@ const User = require('./../model/user.schema.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
 const login = (req, res, next) => {
     let user = User.getByEmail(req.body.email);
     if (!user) {
-        return res.status(401).json({ message: "Login  incorrect." }); // ne pas mettre cette info car utilisateur peut savoir si le user existe deja
+        return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // ne pas mettre cette info car utilisateur peut savoir si le user existe deja
     }
     if (!bcrypt.compareSync(req.body.password, user.password)) {
-        return res.status(401).json({ message: "Mot passe incorrect." }); // idem 
+        return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // idem 
     }
     res.status(200).json({
         id: user.id,
