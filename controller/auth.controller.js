@@ -1,6 +1,7 @@
 const User = require('./../model/user.schema.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 
 const login = (req, res, next) => {
@@ -18,7 +19,7 @@ const login = (req, res, next) => {
             id: user.id,
             email: user.email,
             roles: user.roles
-        }, "ZXZhbCBzZWN1IHdlYg==") // a voir
+        }, process.env.TOKEN) // a voir
     });
 }
 
