@@ -2,26 +2,36 @@ const User = require('./../model/user.schema.js');
 const Role = require('../model/role.schema.js');
 const bcrypt = require('bcrypt');
 
-const getAll = (req, res, next) => {
-    let result = User.findAll();
-    res.status(200).json(result);
-}
+const getAll = async (req, res, next) => {
+    try {
+        let result = await User.findAll();
+        res.status(200).json(result);
+    } catch (e) {
+        res.status(500).json({ error: "Une erreur est survenue lors de la récupération des utilisateurs." });
+    }
+};
 
 const getById = async (req, res, next) => {
-    let result = await User.findOne({
-        where: {
-            id: req.params.id
+    try {
+        let result = await User.findOne({
+            where: { id: req.params.id }
+        });
+        if (!result) {
+            return res.status(404).json({ error: "Utilisateur introuvable." });
         }
-    });
-    res.status(200).json(result);
-}
+        res.status(200).json(result);
+    } catch (e) {
+        res.status(500).json({ error: "Une erreur est survenue lors de la récupération de l'utilisateur." });
+    }
+};
 
 const create = async (req, res, next) => {
-    let member = await Role.findOne({ where: { name: "Member" } });
-    if (!member) {
-        return res.status(404).json({ message: "Le rôle Member n'as pas été trouvé" });
-    }
     try {
+        let member = await Role.findOne({ where: { name: "Member" } });
+        if (!member) {
+            return res.status(404).json({ message: "Le rôle Member n'a pas été trouvé." });
+        }
+
         let result = await User.create({
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 12),
@@ -29,42 +39,36 @@ const create = async (req, res, next) => {
         });
         res.status(201).json(result);
     } catch (e) {
-        res.status(400).json({ error: e.message });
+        res.status(500).json({ error: "Une erreur est survenue lors de la création de l'utilisateur." });
     }
-}
+};
 
-const update = (req, res, next) => {
-    let result = User.updateOne(req.body, { id: req.params.id });
-    res.status(201).json(result);
-}
-
-const remove = (req, res, next) => {
-    let result = User.remove(req.params.id);
-    res.status(200).json(result);
-}
-
-const addRole = async (req, res, next) => {
+const update = async (req, res, next) => {
     try {
-        let role = await Role.findOne({ where: { id: req.params.roleId } });
-        let user = await User.findOne({ where: { id: req.params.userId } });
-        user.addRole(role);
-        user.save();
-        return res.status(201).json({ message: "Le rôle a bien été ajouté à l'utilisateur" });
+        let result = await User.update(req.body, {
+            where: { id: req.params.id }
+        });
+        if (result[0] === 0) {
+            return res.status(404).json({ error: "Utilisateur introuvable ou aucune modification effectuée." });
+        }
+        res.status(200).json({ message: "Utilisateur mis à jour avec succès." });
     } catch (e) {
-        return res.status(404).json(e);
+        res.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de l'utilisateur." });
     }
-}
+};
 
-const removeRole = async (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
-        let role = await Role.findOne({ where: { id: req.params.roleId } });
-        let user = await User.findOne({ where: { id: req.params.userId } });
-        user.removeRole(role);
-        user.save();
-        return res.status(201).json({ message: "Le rôle a bien été retiré de l'utilisateur" });
+        let result = await User.destroy({
+            where: { id: req.params.id }
+        });
+        if (result === 0) {
+            return res.status(404).json({ error: "Utilisateur introuvable." });
+        }
+        res.status(200).json({ message: "Utilisateur supprimé avec succès." });
     } catch (e) {
-        return res.status(404).json(e);
+        res.status(500).json({ error: "Une erreur est survenue lors de la suppression de l'utilisateur." });
     }
-}
+};
 
-module.exports = { getAll, create, getById, update, remove, addRole, removeRole };
+module.exports = { getAll, create, getById, update, remove };
