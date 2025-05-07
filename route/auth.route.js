@@ -6,8 +6,9 @@ const checkBlacklist = require('../middleware/blacklistip.middleware.js')
 
 
 router.use(checkBlacklist);
+router.use(limiter(10,100));
 
 router.post('/login', authController.login);
-router.post('/signin',limiter(1,5), authController.signIn); // pas de limiter sur le login
+router.post('/signin', authController.signIn); // pas de limiter sur le login
 
 module.exports = router;

@@ -13,13 +13,11 @@ const login = (req, res, next) => {
         return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // idem 
     }
     res.status(200).json({
-        id: user.id,
         email: user.email,
         token: jwt.sign({
             id: user.id,
-            email: user.email,
-            roles: user.roles
-        }, process.env.TOKEN) // a voir
+            email: user.email
+        }, process.env.TOKEN)
     });
 }
 
@@ -31,7 +29,7 @@ const signIn = async (req,res,next) => {
     try {
         let result = await User.create({
             email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 10), // mettre le nombre de boucle de hashage plus elever (ex : 12)
+            password: bcrypt.hashSync(req.body.password, 10),
             roles: [member.id]
         });
         res.status(201).json(result);

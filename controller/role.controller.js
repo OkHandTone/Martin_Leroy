@@ -6,7 +6,7 @@ const getAll = (req, res, next) => {
 }
 
 const getById = async (req, res, next) => {
-    let result = await Role.findOne({ // utilisation var const
+    let result = await Role.findOne({ 
         where: {
             id: req.params.id
         }
