@@ -7,7 +7,6 @@ const getAll = (req, res, next) => {
     res.status(200).json(result);
 }
 
-
 const getById = async (req, res, next) => {
     let result = await User.findOne({
         where: {
