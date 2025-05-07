@@ -5,6 +5,7 @@ const Joi = require('joi');
 require('dotenv').config();
 
 const login = (req, res, next) => {
+
     const schema = Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(8).required()
@@ -19,9 +20,11 @@ const login = (req, res, next) => {
     if (!user) {
         return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // ne pas mettre cette info car utilisateur peut savoir si le user existe deja
     }
+
     if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res.status(401).json({ message: "Login ou mot de passe incorrect." }); // idem 
     }
+    
     res.status(200).json({
         email: user.email,
         token: jwt.sign({
